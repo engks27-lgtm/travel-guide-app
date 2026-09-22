@@ -11,8 +11,26 @@ export function getRecommendations(
   preference: TravelPreference,
   allDestinations: Destination[] = mockDestinations
 ): RecommendationResult[] {
-  const scoredList = allDestinations.map((dest) => {
-    let score = 50; // 기본 점수
+
+  // 0. 키워드 검색 필터링 (입력된 검색어가 있는 경우)
+  let filtered = allDestinations;
+  if (preference.searchKeyword && preference.searchKeyword.trim() !== '') {
+    const kw = preference.searchKeyword.trim().toLowerCase();
+    filtered = allDestinations.filter((dest) => 
+      dest.name.toLowerCase().includes(kw) ||
+      dest.region.toLowerCase().includes(kw) ||
+      dest.description.toLowerCase().includes(kw) ||
+      dest.styles.some((s) => s.toLowerCase().includes(kw))
+    );
+
+    // 검색 결과가 없는 경우 전체에서 추천
+    if (filtered.length === 0) {
+      filtered = allDestinations;
+    }
+  }
+
+  const scoredList = filtered.map((dest) => {
+    let score = 0;
 
     // 1. 여행 스타일 매칭 (최대 40점)
     if (dest.primaryStyle === preference.style) {
@@ -20,53 +38,82 @@ export function getRecommendations(
     } else if (dest.styles.includes(preference.style)) {
       score += 25;
     } else {
-      score += 5;
+      score += 10;
     }
 
-    // 2. 예산 매칭 (최대 25점)
+    // 2. 예산 매칭 (최대 30점)
     const userBudgetVal = budgetOrder[preference.budget];
     const destBudgetVal = budgetOrder[dest.budgetCategory];
 
     if (destBudgetVal <= userBudgetVal) {
-      score += 25; // 예산 내 충족
+      score += 30; // 예산 범위 내
     } else if (destBudgetVal === userBudgetVal + 1) {
-      score += 10; // 약간 초과
+      score += 12; // 약간 초과
     } else {
       score += 0;
     }
 
-    // 3. 기간 매칭 (최대 20점)
-    if (dest.recommendedDurations.includes(preference.duration)) {
-      score += 20;
+    // 3. 비행시간 매칭 (최대 10점)
+    if (preference.flightTimeMax !== undefined) {
+      if (dest.flightTimeHours <= preference.flightTimeMax) {
+        score += 10;
+      } else if (dest.flightTimeHours <= preference.flightTimeMax + 2) {
+        score += 4;
+      } else {
+        score += 1;
+      }
     } else {
-      score += 8;
+      score += 10;
     }
 
-    // 4. 동행 유형 매칭 (최대 15점)
-    if (dest.suitableCompanions.includes(preference.companion)) {
-      score += 15;
-    } else {
+    // 4. 선호 숙소 & 여행 월 매칭 (최대 10점: 각 5점)
+    if (preference.accommodation && dest.accommodationTypes.includes(preference.accommodation)) {
       score += 5;
+    } else {
+      score += 2;
     }
 
-    // 약간의 디테일감을 위한 점수 보정 (90~99% 범위 내로 맞춤)
+    if (preference.month && dest.bestMonths.includes(preference.month)) {
+      score += 5;
+    } else {
+      score += 2;
+    }
+
+    // 5. 기간 & 동행 매칭 (최대 10점: 각 5점)
+    if (dest.recommendedDurations.includes(preference.duration)) {
+      score += 5;
+    } else {
+      score += 2;
+    }
+
+    if (dest.suitableCompanions.includes(preference.companion)) {
+      score += 5;
+    } else {
+      score += 2;
+    }
+
+    // 점수 보정 (75~99% 범위 내)
     const finalScore = Math.min(99, Math.max(75, Math.floor(score)));
 
     // 맞춤 추천 이유 생성
     const reasonParts: string[] = [];
 
-    reasonParts.push(`선택하신 **'${preference.style}'** 여행 스타일에 매우 부합하는 대표 인기 여행지입니다.`);
+    reasonParts.push(`선택하신 **'${preference.style}'** 취향에 꼭 맞춘 대표 추천지입니다.`);
     
     if (destBudgetVal <= userBudgetVal) {
-      reasonParts.push(`**'${preference.budget}'** 예산 기준에 맞춰 알뜰하게 다녀오실 수 있는 가성비 코스입니다.`);
+      reasonParts.push(`**'${preference.budget}'** 예산 범위 안에서 다녀오기 좋은 코스입니다.`);
     }
 
-    if (dest.recommendedDurations.includes(preference.duration)) {
-      reasonParts.push(`**'${preference.duration}'** 일정으로 핵심 하이라이트를 모두 둘러보기에 딱 좋은 동선입니다.`);
+    if (preference.flightTimeMax !== undefined && dest.flightTimeHours <= preference.flightTimeMax) {
+      reasonParts.push(`비행시간 약 **${dest.flightTimeHours}시간**으로 설정하신 시간 조건에 잘 맞습니다.`);
     }
 
-    if (dest.suitableCompanions.includes(preference.companion)) {
-      reasonParts.push(`**'${preference.companion}'**(와)과 함께 방문할 때満足도가 특히 높은 장소입니다.`);
+    if (preference.month && dest.bestMonths.includes(preference.month)) {
+      reasonParts.push(`**${preference.month}월**에 방문할 때 최적의 날씨와 풍경을 즐길 수 있습니다.`);
+    }
+
+    if (preference.accommodation && dest.accommodationTypes.includes(preference.accommodation)) {
+      reasonParts.push(`선호하시는 **'${preference.accommodation}'** 스타일의 숙소가 다양하게 갖춰져 있습니다.`);
     }
 
     const fullReason = reasonParts.join(' ');
@@ -78,7 +125,7 @@ export function getRecommendations(
     };
   });
 
-  // 점수 높은 순으로 정렬 후 상위 3개 반환
+  // 점수 높은 순 정렬 후 상위 3개 반환
   scoredList.sort((a, b) => b.score - a.score);
   return scoredList.slice(0, 3);
 }

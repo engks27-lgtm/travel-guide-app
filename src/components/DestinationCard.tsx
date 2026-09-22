@@ -11,8 +11,18 @@ import {
   Sparkles, 
   ArrowRight,
   CheckCircle,
-  Award
+  Award,
+  Plane,
+  Home
 } from 'lucide-react';
+
+const ACCOMMODATION_LABELS: Record<string, string> = {
+  hotel: '호텔',
+  resort: '리조트',
+  pension: '펜션/풀빌라',
+  guesthouse: '게스트하우스',
+  camping: '캠핑/글램핑',
+};
 
 interface DestinationCardProps {
   result: RecommendationResult;
@@ -110,10 +120,10 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
         {/* Key Info Badges */}
         <div className="grid grid-cols-2 gap-2 text-xs pt-1">
           <div className="p-2.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#00a894] shrink-0" />
+            <Plane className="w-4 h-4 text-[#00a894] shrink-0" />
             <div>
-              <span className="text-[10px] text-[#6c6d6f] block font-semibold">추천 기간</span>
-              <span className="font-bold text-[#222222]">{destination.recommendedDurations.join(', ')}</span>
+              <span className="text-[10px] text-[#6c6d6f] block font-semibold">비행시간</span>
+              <span className="font-bold text-[#222222]">약 {destination.flightTimeHours}시간</span>
             </div>
           </div>
 
@@ -122,6 +132,24 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
             <div>
               <span className="text-[10px] text-[#6c6d6f] block font-semibold">예상 비용</span>
               <span className="font-bold text-[#222222] line-clamp-1">{destination.estimatedCostText}</span>
+            </div>
+          </div>
+
+          <div className="p-2.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-[#00a894] shrink-0" />
+            <div>
+              <span className="text-[10px] text-[#6c6d6f] block font-semibold">추천 방문월</span>
+              <span className="font-bold text-[#222222]">{destination.bestMonths.slice(0, 3).map(m => `${m}월`).join(', ')}{destination.bestMonths.length > 3 ? ' 등' : ''}</span>
+            </div>
+          </div>
+
+          <div className="p-2.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-2">
+            <Home className="w-4 h-4 text-[#00a894] shrink-0" />
+            <div>
+              <span className="text-[10px] text-[#6c6d6f] block font-semibold">추천 숙소</span>
+              <span className="font-bold text-[#222222] line-clamp-1">
+                {destination.accommodationTypes.map(t => ACCOMMODATION_LABELS[t] || t).slice(0, 2).join(', ')}
+              </span>
             </div>
           </div>
         </div>

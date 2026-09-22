@@ -13,8 +13,18 @@ import {
   Heart, 
   CheckCircle,
   Lightbulb,
-  Clock
+  Clock,
+  Plane,
+  Home
 } from 'lucide-react';
+
+const ACCOMMODATION_LABELS: Record<string, string> = {
+  hotel: '호텔',
+  resort: '리조트',
+  pension: '펜션/풀빌라',
+  guesthouse: '게스트하우스',
+  camping: '캠핑/글램핑',
+};
 
 interface DestinationDetailModalProps {
   result: RecommendationResult | null;
@@ -89,6 +99,16 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div className="p-3.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-3">
               <div className="p-2.5 rounded-[12px] bg-[#e6fdfa] text-[#00a894]">
+                <Plane className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] text-[#6c6d6f] font-bold block uppercase">비행 시간</span>
+                <span className="font-bold text-[#222222] text-xs sm:text-sm">약 {destination.flightTimeHours}시간</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-3">
+              <div className="p-2.5 rounded-[12px] bg-[#e6fdfa] text-[#00a894]">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
@@ -107,13 +127,27 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] col-span-2 sm:col-span-1 flex items-center gap-3">
+            <div className="p-3.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] flex items-center gap-3">
               <div className="p-2.5 rounded-[12px] bg-[#e6fdfa] text-[#00a894]">
                 <Sun className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-[#6c6d6f] font-bold block uppercase">최적 방문 시기</span>
-                <span className="font-bold text-[#222222] text-xs sm:text-sm">{destination.bestSeason}</span>
+                <span className="text-[10px] text-[#6c6d6f] font-bold block uppercase">추천 방문월</span>
+                <span className="font-bold text-[#222222] text-xs sm:text-sm">
+                  {destination.bestMonths.map(m => `${m}월`).join(', ')} ({destination.bestSeason})
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-[12px] bg-[#f3f4f5] border border-[#e5e7eb] col-span-2 sm:col-span-2 flex items-center gap-3">
+              <div className="p-2.5 rounded-[12px] bg-[#e6fdfa] text-[#00a894]">
+                <Home className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] text-[#6c6d6f] font-bold block uppercase">추천 숙소 형태</span>
+                <span className="font-bold text-[#222222] text-xs sm:text-sm">
+                  {destination.accommodationTypes.map(t => ACCOMMODATION_LABELS[t] || t).join(' · ')}
+                </span>
               </div>
             </div>
           </div>
