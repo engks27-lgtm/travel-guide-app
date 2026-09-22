@@ -15,7 +15,10 @@ import {
   Lightbulb,
   Clock,
   Plane,
-  Home
+  Home,
+  Copy,
+  Share2,
+  Star
 } from 'lucide-react';
 
 const ACCOMMODATION_LABELS: Record<string, string> = {
@@ -32,6 +35,8 @@ interface DestinationDetailModalProps {
   isSaved: boolean;
   onClose: () => void;
   onToggleSave: (id: string) => void;
+  onCopyItinerary?: (msg: string) => void;
+  onShareLink?: (msg: string) => void;
 }
 
 export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
@@ -40,10 +45,40 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   isSaved,
   onClose,
   onToggleSave,
+  onCopyItinerary,
+  onShareLink,
 }) => {
   if (!isOpen || !result) return null;
 
   const { destination, score, reason } = result;
+
+  const handleCopyItineraryText = () => {
+    let text = `[트립파인더] ${destination.name} 3일 추천 일정\n지역: ${destination.region}\n예상 경비: ${destination.estimatedCostText}\n\n`;
+    destination.sampleItinerary.forEach((plan) => {
+      text += `📌 Day ${plan.day}: ${plan.title}\n`;
+      plan.spots.forEach((spot) => {
+        text += `  - ${spot}\n`;
+      });
+      if (plan.tip) text += `  💡 팁: ${plan.tip}\n`;
+      text += `\n`;
+    });
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
+    if (onCopyItinerary) {
+      onCopyItinerary(`'${destination.name}' 3일 상세 일정이 복사되었습니다.`);
+    }
+  };
+
+  const handleShareDestination = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+    }
+    if (onShareLink) {
+      onShareLink(`'${destination.name}' 여행지 추천 링크가 복사되었습니다.`);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/60 backdrop-blur-sm animate-fade-in">
@@ -83,6 +118,10 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white font-medium text-xs flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-[#0cefd3]" />
                 {destination.region}
+              </span>
+              <span className="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-amber-400 font-bold text-xs flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-amber-400" />
+                <span className="text-white">4.9 (1.2k)</span>
               </span>
             </div>
 
@@ -184,10 +223,21 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
 
           {/* Sample Itinerary Day-by-Day */}
           <div>
-            <h3 className="text-lg font-bold text-[#222222] mb-4 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#00a894]" />
-              <span>추천 일자별 코스 (Sample Itinerary)</span>
-            </h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <h3 className="text-lg font-bold text-[#222222] flex items-center gap-2">
+                <Clock className="w-5 h-5 text-[#00a894]" />
+                <span>추천 일자별 코스 (Sample Itinerary)</span>
+              </h3>
+
+              {/* Copy Itinerary Action */}
+              <button
+                onClick={handleCopyItineraryText}
+                className="px-3.5 py-1.5 rounded-[8px] bg-[#e6fdfa] hover:bg-[#0cefd3] text-[#007a6c] hover:text-[#222222] font-bold text-xs transition-colors flex items-center gap-1.5 border border-[#0cefd3]/40 self-start sm:self-auto"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                <span>3일 일정 텍스트 전체 복사</span>
+              </button>
+            </div>
 
             <div className="space-y-4">
               {destination.sampleItinerary.map((plan) => (
@@ -226,22 +276,32 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 sm:p-6 bg-[#f3f4f5] border-t border-[#e5e7eb] flex items-center justify-between gap-4">
-          <button
-            onClick={() => onToggleSave(destination.id)}
-            className={`px-5 py-3 rounded-[12px] border text-sm font-bold flex items-center gap-2 transition-colors ${
-              isSaved
-                ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100'
-                : 'border-[#e5e7eb] bg-white text-[#222222] hover:bg-[#e8e9eb]'
-            }`}
-          >
-            <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
-            <span>{isSaved ? '보관함에서 제거' : '보관함에 저장'}</span>
-          </button>
+        <div className="p-4 sm:p-6 bg-[#f3f4f5] border-t border-[#e5e7eb] flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onToggleSave(destination.id)}
+              className={`px-4 sm:px-5 py-3 rounded-[12px] border text-xs sm:text-sm font-bold flex items-center gap-2 transition-colors ${
+                isSaved
+                  ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100'
+                  : 'border-[#e5e7eb] bg-white text-[#222222] hover:bg-[#e8e9eb]'
+              }`}
+            >
+              <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
+              <span>{isSaved ? '보관함 제거' : '보관함 저장'}</span>
+            </button>
+
+            <button
+              onClick={handleShareDestination}
+              className="px-4 py-3 rounded-[12px] border border-[#e5e7eb] bg-white hover:bg-[#e6fdfa] text-[#222222] hover:text-[#007a6c] font-bold text-xs sm:text-sm transition-colors flex items-center gap-1.5"
+            >
+              <Share2 className="w-4 h-4 text-[#00a894]" />
+              <span>공유하기</span>
+            </button>
+          </div>
 
           <button
             onClick={onClose}
-            className="px-6 py-3 rounded-[12px] bg-[#222222] hover:bg-black text-white font-bold text-sm transition-colors"
+            className="px-6 py-3 rounded-[12px] bg-[#222222] hover:bg-black text-white font-bold text-xs sm:text-sm transition-colors"
           >
             닫기
           </button>

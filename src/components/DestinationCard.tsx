@@ -13,7 +13,8 @@ import {
   CheckCircle,
   Award,
   Plane,
-  Home
+  Home,
+  Star
 } from 'lucide-react';
 
 const ACCOMMODATION_LABELS: Record<string, string> = {
@@ -58,11 +59,15 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
         {/* Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-        {/* Rank Badge */}
+        {/* Rank & Rating Badges */}
         <div className="absolute top-4 left-4 flex items-center gap-2">
           <span className="px-3.5 py-1.5 rounded-full bg-[#222222] text-[#0cefd3] text-xs font-black tracking-wider uppercase shadow-md flex items-center gap-1.5 border border-[#0cefd3]/30">
             <Award className="w-4 h-4 text-[#0cefd3]" />
             <span>TOP {rank} 추천</span>
+          </span>
+          <span className="px-2.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-amber-400 text-xs font-bold shadow-md flex items-center gap-1 border border-white/20">
+            <Star className="w-3.5 h-3.5 fill-amber-400" />
+            <span className="text-white">4.9</span>
           </span>
         </div>
 

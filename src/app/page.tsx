@@ -9,6 +9,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { ResultSection } from '@/components/ResultSection';
 import { DestinationDetailModal } from '@/components/DestinationDetailModal';
 import { SavedTripsModal } from '@/components/SavedTripsModal';
+import { ToastAlert } from '@/components/ToastAlert';
 
 import { TravelPreference, RecommendationResult, Destination } from '@/types/travel';
 import { getRecommendations } from '@/utils/recommendationEngine';
@@ -29,6 +30,9 @@ export default function Home() {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isSavedModalOpen, setIsSavedModalOpen] = useState(false);
 
+  // Toast alert state
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   // Hydrate saved trips on client mount
   useEffect(() => {
     try {
@@ -42,12 +46,15 @@ export default function Home() {
   }, []);
 
   const toggleSaveDestination = (id: string) => {
+    const destName = mockDestinations.find((d) => d.id === id)?.name || '여행지';
     setSavedIds((prev) => {
       let updated: string[];
       if (prev.includes(id)) {
         updated = prev.filter((item) => item !== id);
+        setToastMessage(`'${destName}'을(를) 보관함에서 제거했습니다.`);
       } else {
         updated = [...prev, id];
+        setToastMessage(`'${destName}'을(를) 보관함에 저장했습니다!`);
       }
       try {
         localStorage.setItem('saved_travel_ids', JSON.stringify(updated));
@@ -56,6 +63,13 @@ export default function Home() {
       }
       return updated;
     });
+  };
+
+  const handleShareApp = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+    }
+    setToastMessage('트립파인더 앱 공유 링크가 복사되었습니다!');
   };
 
   const handleFormSubmit = (pref: TravelPreference) => {
@@ -115,6 +129,7 @@ export default function Home() {
         savedCount={savedIds.length}
         onOpenSaved={() => setIsSavedModalOpen(true)}
         onReset={handleReset}
+        onShareApp={handleShareApp}
       />
 
       <main className="flex-1">
@@ -143,7 +158,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onShareApp={handleShareApp} />
 
       {/* Detail Modal */}
       <DestinationDetailModal
@@ -152,6 +167,8 @@ export default function Home() {
         isSaved={detailResult ? savedIds.includes(detailResult.destination.id) : false}
         onClose={() => setIsDetailOpen(false)}
         onToggleSave={toggleSaveDestination}
+        onCopyItinerary={(msg) => setToastMessage(msg)}
+        onShareLink={(msg) => setToastMessage(msg)}
       />
 
       {/* Saved Trips Drawer/Modal */}
@@ -161,6 +178,12 @@ export default function Home() {
         onClose={() => setIsSavedModalOpen(false)}
         onRemoveSave={toggleSaveDestination}
         onOpenDetail={(dest) => handleOpenDetailModal(dest)}
+      />
+
+      {/* Floating Toast Notification */}
+      <ToastAlert
+        message={toastMessage}
+        onClose={() => setToastMessage(null)}
       />
 
     </div>
