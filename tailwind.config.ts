@@ -9,6 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        baemin: {
+          mint: '#0cefd3',
+          'mint-hover': '#00d6bd',
+          'mint-light': '#e6fdfa',
+          dark: '#222222',
+          muted: '#6c6d6f',
+          panel: '#f6f6f6',
+          surface: '#f3f4f5',
+          border: '#a6a7a9',
+        },
         brand: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -20,6 +30,9 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)', 'sans-serif'],
+      },
+      borderRadius: {
+        'baemin': '12px',
       },
     },
   },

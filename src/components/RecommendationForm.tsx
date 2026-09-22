@@ -69,15 +69,15 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
 
   return (
     <div id="preference-form" className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xl shadow-slate-200/50">
+      <div className="bg-white rounded-[12px] p-6 sm:p-10 border border-[#e5e7eb] shadow-md">
         
         {/* Form Header */}
-        <div className="mb-8 text-center sm:text-left border-b border-slate-100 pb-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-2.5 mb-2">
+        <div className="mb-8 text-center sm:text-left border-b border-[#f3f4f5] pb-6">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#222222] tracking-tight flex items-center justify-center sm:justify-start gap-2.5 mb-2">
             <span>여행 조건 선택하기</span>
-            <Sparkles className="w-6 h-6 text-sky-500" />
+            <Sparkles className="w-6 h-6 text-[#0cefd3]" />
           </h2>
-          <p className="text-slate-500 text-sm">
+          <p className="text-[#6c6d6f] text-sm">
             원하시는 스타일과 조건을 선택하시면 맞춤 여행지를 실시간 계산해 드립니다.
           </p>
         </div>
@@ -86,8 +86,8 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
           
           {/* 1. 여행 스타일 */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-700 text-xs font-black flex items-center justify-center">1</span>
+            <label className="block text-sm font-bold text-[#222222] mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#e6fdfa] text-[#007a6c] text-xs font-black flex items-center justify-center border border-[#0cefd3]/30">1</span>
               <span>선호하는 여행 스타일</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -99,21 +99,21 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
                     key={item.label}
                     type="button"
                     onClick={() => setStyle(item.label)}
-                    className={`relative p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    className={`relative p-4 rounded-[12px] border text-left transition-all flex flex-col justify-between ${
                       isSelected
-                        ? 'border-sky-500 bg-sky-50/70 text-sky-900 ring-2 ring-sky-500/20 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:bg-slate-50/50'
+                        ? 'border-[#0cefd3] bg-[#e6fdfa] text-[#222222] ring-2 ring-[#0cefd3]/40 shadow-sm'
+                        : 'border-[#e5e7eb] hover:border-[#a6a7a9] bg-white text-[#222222] hover:bg-[#f3f4f5]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`p-2.5 rounded-[12px] ${isSelected ? 'bg-[#0cefd3] text-[#222222]' : 'bg-[#f3f4f5] text-[#232324]'}`}>
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {isSelected && <CheckCircle2 className="w-5 h-5 text-sky-600 shrink-0" />}
+                      {isSelected && <CheckCircle2 className="w-5 h-5 text-[#00bfa8] shrink-0" />}
                     </div>
                     <div>
                       <div className="font-bold text-sm mb-0.5">{item.label}</div>
-                      <div className="text-[11px] text-slate-500 line-clamp-1">{item.desc}</div>
+                      <div className="text-[11px] text-[#6c6d6f] line-clamp-1">{item.desc}</div>
                     </div>
                   </button>
                 );
@@ -123,8 +123,8 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
 
           {/* 2. 여행 기간 */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-700 text-xs font-black flex items-center justify-center">2</span>
+            <label className="block text-sm font-bold text-[#222222] mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#e6fdfa] text-[#007a6c] text-xs font-black flex items-center justify-center border border-[#0cefd3]/30">2</span>
               <span>희망 여행 기간</span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -135,22 +135,22 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
                     key={item.label}
                     type="button"
                     onClick={() => setDuration(item.label)}
-                    className={`p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${
+                    className={`p-4 rounded-[12px] border text-left transition-all flex items-center justify-between ${
                       isSelected
-                        ? 'border-sky-500 bg-sky-50/70 text-sky-900 ring-2 ring-sky-500/20 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:bg-slate-50/50'
+                        ? 'border-[#0cefd3] bg-[#e6fdfa] text-[#222222] ring-2 ring-[#0cefd3]/40 shadow-sm'
+                        : 'border-[#e5e7eb] hover:border-[#a6a7a9] bg-white text-[#222222] hover:bg-[#f3f4f5]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`p-2.5 rounded-[12px] ${isSelected ? 'bg-[#0cefd3] text-[#222222]' : 'bg-[#f3f4f5] text-[#232324]'}`}>
                         <Calendar className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="font-bold text-sm">{item.label}</div>
-                        <div className="text-xs text-slate-500">{item.desc}</div>
+                        <div className="text-xs text-[#6c6d6f]">{item.desc}</div>
                       </div>
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-sky-600 shrink-0" />}
+                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#00bfa8] shrink-0" />}
                   </button>
                 );
               })}
@@ -159,8 +159,8 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
 
           {/* 3. 예산 범위 */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-700 text-xs font-black flex items-center justify-center">3</span>
+            <label className="block text-sm font-bold text-[#222222] mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#e6fdfa] text-[#007a6c] text-xs font-black flex items-center justify-center border border-[#0cefd3]/30">3</span>
               <span>1인 기준 예산</span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -171,22 +171,22 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
                     key={item.label}
                     type="button"
                     onClick={() => setBudget(item.label)}
-                    className={`p-4 rounded-2xl border text-left transition-all flex items-center justify-between ${
+                    className={`p-4 rounded-[12px] border text-left transition-all flex items-center justify-between ${
                       isSelected
-                        ? 'border-sky-500 bg-sky-50/70 text-sky-900 ring-2 ring-sky-500/20 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:bg-slate-50/50'
+                        ? 'border-[#0cefd3] bg-[#e6fdfa] text-[#222222] ring-2 ring-[#0cefd3]/40 shadow-sm'
+                        : 'border-[#e5e7eb] hover:border-[#a6a7a9] bg-white text-[#222222] hover:bg-[#f3f4f5]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`p-2.5 rounded-[12px] ${isSelected ? 'bg-[#0cefd3] text-[#222222]' : 'bg-[#f3f4f5] text-[#232324]'}`}>
                         <Wallet className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="font-bold text-sm">{item.label}</div>
-                        <div className="text-xs text-slate-500">{item.desc}</div>
+                        <div className="text-xs text-[#6c6d6f]">{item.desc}</div>
                       </div>
                     </div>
-                    {isSelected && <CheckCircle2 className="w-5 h-5 text-sky-600 shrink-0" />}
+                    {isSelected && <CheckCircle2 className="w-5 h-5 text-[#00bfa8] shrink-0" />}
                   </button>
                 );
               })}
@@ -195,8 +195,8 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
 
           {/* 4. 동행 유형 */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-700 text-xs font-black flex items-center justify-center">4</span>
+            <label className="block text-sm font-bold text-[#222222] mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#e6fdfa] text-[#007a6c] text-xs font-black flex items-center justify-center border border-[#0cefd3]/30">4</span>
               <span>누구와 떠나시나요?</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -208,21 +208,21 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
                     key={item.label}
                     type="button"
                     onClick={() => setCompanion(item.label)}
-                    className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    className={`p-4 rounded-[12px] border text-left transition-all flex flex-col justify-between ${
                       isSelected
-                        ? 'border-sky-500 bg-sky-50/70 text-sky-900 ring-2 ring-sky-500/20 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:bg-slate-50/50'
+                        ? 'border-[#0cefd3] bg-[#e6fdfa] text-[#222222] ring-2 ring-[#0cefd3]/40 shadow-sm'
+                        : 'border-[#e5e7eb] hover:border-[#a6a7a9] bg-white text-[#222222] hover:bg-[#f3f4f5]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <div className={`p-2.5 rounded-xl ${isSelected ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`p-2.5 rounded-[12px] ${isSelected ? 'bg-[#0cefd3] text-[#222222]' : 'bg-[#f3f4f5] text-[#232324]'}`}>
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {isSelected && <CheckCircle2 className="w-5 h-5 text-sky-600 shrink-0" />}
+                      {isSelected && <CheckCircle2 className="w-5 h-5 text-[#00bfa8] shrink-0" />}
                     </div>
                     <div>
                       <div className="font-bold text-sm mb-0.5">{item.label}</div>
-                      <div className="text-[11px] text-slate-500 line-clamp-1">{item.desc}</div>
+                      <div className="text-[11px] text-[#6c6d6f] line-clamp-1">{item.desc}</div>
                     </div>
                   </button>
                 );
@@ -234,7 +234,7 @@ export const RecommendationForm: React.FC<RecommendationFormProps> = ({ onSubmit
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-600 to-teal-500 hover:from-sky-600 hover:to-indigo-700 text-white font-extrabold text-lg shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-[12px] bg-[#0cefd3] hover:bg-[#00d6bd] text-[#222222] font-extrabold text-lg shadow-lg shadow-[#0cefd3]/25 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
               <span>맞춤 여행지 추천 결과 보기</span>
